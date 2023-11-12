@@ -1,11 +1,11 @@
 function getRecent(callback) {
   chrome.windows.getLastFocused({ populate: true }, (window) => {
-    callback({window, tabs: window.tabs})
+    callback({ window, tabs: window.tabs });
   });
 }
 
 function cycleTabs(direction) {
-  getRecent(({tabs}) => {
+  getRecent(({ tabs }) => {
     let currentTab = tabs.find((e) => e.active);
     if (!currentTab) return;
 
@@ -18,7 +18,7 @@ function cycleTabs(direction) {
 function onCommand(name, tab) {
   switch (name) {
     case "NEW_TAB":
-      getRecent(({window}) => {
+      getRecent(({ window }) => {
         chrome.tabs.create({ windowId: window?.id });
 
         if (window && window.state === chrome.windows.WindowState.FULLSCREEN) {
@@ -46,7 +46,7 @@ function onCommand(name, tab) {
       break;
 
     case "CLOSE_WINDOW":
-      getRecent(({window}) => {
+      getRecent(({ window }) => {
         if (window.focused) {
           chrome.windows.remove(window.id);
         }
@@ -64,7 +64,7 @@ function onCommand(name, tab) {
     case "SWITCH_WINDOWS":
       chrome.windows.getAll((windows) => {
         if (windows.length === 1) return;
-        getRecent(({window}) => {
+        getRecent(({ window }) => {
           chrome.windows.update(window.id, { focused: false });
         });
       })
